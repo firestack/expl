@@ -10,8 +10,7 @@ defmodule Expl.Application do
     children = [
       Expl.Repo,
       {Ecto.Migrator,
-        repos: Application.fetch_env!(:expl, :ecto_repos),
-        skip: skip_migrations?()},
+       repos: Application.fetch_env!(:expl, :ecto_repos), skip: skip_migrations?()},
       {DNSCluster, query: Application.get_env(:expl, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Expl.PubSub}
       # Start a worker by calling: Expl.Worker.start_link(arg)
