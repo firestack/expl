@@ -9,6 +9,29 @@
 # move said applications out of the umbrella.
 import Config
 
+config :expl, Expl.Feeds,
+  feed_key_map: %{
+    bus: ["mbta_bus_", "trip_updates"],
+    subway_vehicle: ["rtr", "VehiclePositions"],
+    subway: ["rtr", "TripUpdates"],
+    cr: ["mbta_cr_", "trip_updates"],
+    cr_vehicle: ["mbta_cr_", "vehicle_positions"],
+    cr_boarding: ["com_TripUpdates_enhanced"],
+    winthrop: ["mbta_winthrop_", "trip_updates"],
+    concentrate: [
+      "concentrate_TripUpdates_enhanced",
+      "realtime_TripUpdates_enhanced"
+    ],
+    concentrate_vehicle: [
+      "concentrate_VehiclePositions_enhanced",
+      "realtime_VehiclePositions_enhanced"
+    ],
+    alerts: ["Alerts_enhanced"],
+    busloc: ["busloc", "TripUpdates"],
+    busloc_vehicle: ["busloc", "VehiclePositions"],
+    swiftly_bus_vehicle: ["goswift.ly", "mbta_bus", "vehicle_positions"]
+  }
+
 # Configure Mix tasks and generators
 config :expl,
   ecto_repos: [Expl.Repo]
