@@ -36,6 +36,13 @@ defmodule Expl.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ex_aws, "~> 2.5"},
+      {:ex_aws_s3, "~> 2.5"},
+      {:poison, "~> 6.0"},
+      {:req, "~> 0.5.15"},
+      {:sweet_xml, "~> 0.7"},
+      # {:configparser_ex, "~> 5.0"}, # TODO: make only dev?
+
       {:dns_cluster, "~> 0.1.1"},
       {:phoenix_pubsub, "~> 2.1"},
       {:ecto_sql, "~> 3.10"},
