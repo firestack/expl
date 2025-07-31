@@ -27,3 +27,5 @@ erl_crash.dump
 *.db
 *.db-*
 
+# "Virtual Env" cache
+.cache/
