@@ -15,6 +15,10 @@ pkgs.mkShell {
 
 		# Ecto DB
 		pkgs.sqlite
+
+		# Secrets, such as:
+		# - AWS Credentials
+		pkgs._1password-cli
 	]
 	# Phoenix live-reload requirements
 	++ lib.optionals stdenv.hostPlatform.isLinux [ pkgs.inotify-tools ];
