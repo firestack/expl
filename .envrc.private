@@ -1,0 +1,1 @@
+direnv_load op run --env-file=.env.1p.private -- direnv dump

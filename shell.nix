@@ -13,6 +13,8 @@ pkgs.mkShell {
 		pkgs.sqlite
 
 		pkgs.elixir-ls
+
+		pkgs._1password-cli
 	]
 	++ lib.optionals stdenv.hostPlatform.isLinux [ pkgs.inotify-tools ];
 
