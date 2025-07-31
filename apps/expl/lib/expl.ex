@@ -30,7 +30,7 @@ defmodule Expl do
     []
   end
 
-  defp filter_objects(_objects) do
+  defp filter_objects(_objects, _options) do
     []
   end
 end
