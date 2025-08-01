@@ -31,9 +31,9 @@ defmodule Expl.S3 do
   defp bucket(:prod), do: "mbta-gtfs-s3"
   defp bucket(:dev_blue), do: "mbta-gtfs-s3-dev-blue"
 
-  defp opts(options) do
-    [prefix: query_prefix(options)]
-  end
+  defp opts(options), do: [
+    prefix: query_prefix(options)
+  ]
 
   defp query_prefix(options) do
     # Expl.S3.ObjectPrefix.from_datetime(options[:datetime], object_prefix: "concentrate")
