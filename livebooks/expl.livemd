@@ -1,1 +1,65 @@
 # ExPL Workspace
+
+## Controls
+
+```elixir
+working_timezone_input =
+  Kino.Input.select("Timezone", [
+    {"Etc/UTC", "Etc/UTC"},
+    {"Etc/UTC", "America/Boston"}
+  ])
+```
+
+<!-- livebook:{"reevaluate_automatically":true} -->
+
+```elixir
+start_date_input =
+  Kino.Input.utc_datetime(
+    "Start Date",
+    default: DateTime.utc_now() |> DateTime.shift(day: -7)
+  )
+  |> Kino.render()
+
+end_date_input =
+  Kino.Input.utc_datetime(
+    "End Date",
+    default: DateTime.utc_now()
+  )
+  |> Kino.render()
+
+Kino.nothing()
+```
+
+<!-- livebook:{"reevaluate_automatically":true} -->
+
+```elixir
+[start_dt, end_dt] =
+  [start_date_input, end_date_input]
+  |> Enum.map(&Kino.Input.read/1)
+  |> Enum.map(&DateTime.from_naive!(&1, "Etc/UTC"))
+  # |> Enum.map(&DateTime.shift_zone!(&1, Kino.Input.read(working_timezone_input)))
+
+[start_datetime_utc: start_dt, end_datetime_utc: end_dt]
+```
+
+<!-- livebook:{"reevaluate_automatically":true} -->
+
+```elixir
+current_duration =
+  [:day, :hour, :minute, :second]
+  |> Enum.reduce(
+    Duration.new!(second: 0),
+    fn
+      unit, acc ->
+        diff = DateTime.diff(end_dt, start_dt |> DateTime.shift(acc), unit)
+
+        Duration.add(acc, Duration.new!([{unit, diff}]))
+    end
+  )
+```
+
+## Download Files
+
+```elixir
+if current_duration.day > 1
+```

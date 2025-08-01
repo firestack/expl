@@ -59,6 +59,7 @@ defmodule Expl.S3 do
       prefix: query_prefix(options)
     ]
 
+  # TODO: Add ability to iterate over a range
   defp query_prefix(options) do
     # Expl.S3.ObjectPrefix.from_datetime(options[:datetime], object_prefix: "concentrate")
     Expl.S3.ObjectPrefix.from_datetime(
