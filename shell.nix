@@ -30,7 +30,7 @@ pkgs.mkShell {
 		mkdir -p .cache/nix/mix .cache/nix/hex
 		export MIX_HOME=$PWD/.cache/nix/mix
 		export HEX_HOME=$PWD/.cache/nix/hex
-		export PATH=$MIX_HOME/bin:$HEX_HOME/bin:$PATH
+		export PATH=$MIX_HOME/escripts:$MIX_HOME/bin:$HEX_HOME/bin:$PATH
 
 		# make hex from Nixpkgs available
 		# `mix local.hex` will install hex into MIX_HOME and should take precedence
