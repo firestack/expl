@@ -1,4 +1,4 @@
-defmodule Expl.S3ObjectPrefix do
+defmodule Expl.S3.ObjectPrefix do
   def from_datetime(datetime, opts \\ []) do
     datetime
     |> prefix_for_date()

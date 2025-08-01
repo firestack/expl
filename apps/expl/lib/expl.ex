@@ -10,7 +10,8 @@ defmodule Expl do
   def get_archive(options) do
     options
     |> build_query()
-    |> find_objects()
+    |> Expl.S3.list_objects!()
+    |> Stream.map(&process_object(&1))
   end
 
   defp build_query(options) do
@@ -23,41 +24,14 @@ defmodule Expl do
     |> Map.merge(options)
   end
 
-  defp find_objects(options) do
-    bucket =
-      options
-      |> bucket()
-
-    bucket
-    |> ExAws.S3.list_objects_v2(list_objects_params(options))
-    |> ExAws.stream!()
-    |> Stream.map(&process_object(&1, bucket, options.environment |> to_string))
-  end
-
-  defp bucket(%{environment: :prod}), do: "mbta-gtfs-s3"
-  defp bucket(%{environment: :dev_blue}), do: "mbta-gtfs-s3-dev-blue"
-
-  defp list_objects_params(%{datetime: %DateTime{} = datetime} = options),
-    # [prefix: Expl.S3ObjectPrefix.from_datetime(datetime, object_prefix: "concentrate")] ++
-    do:
-      [
-        prefix:
-          Expl.S3ObjectPrefix.from_datetime(datetime, object_prefix: options[:source] || nil)
-      ] ++
-        list_objects_params()
-
-  defp list_objects_params(), do: []
-
-  defp process_object(
-         %{
-           key: key,
-           e_tag: e_tag,
-           last_modified: last_modified,
-           storage_class: storage_class
-         },
-         bucket,
-         environment
-       ) do
+  defp process_object(%{
+         key: key,
+         e_tag: e_tag,
+         last_modified: last_modified,
+         storage_class: storage_class,
+         bucket: bucket,
+         environment: environment
+       }) do
     %Expl.Db.S3Object{}
     |> Expl.Db.S3Object.changeset(%{
       bucket_name: bucket,
@@ -68,7 +42,7 @@ defmodule Expl do
 
       # processed key
       # environment_id:
-      environment: environment,
+      environment: to_string(environment),
       # source: "concentrate",
       # source: "delta",
 
