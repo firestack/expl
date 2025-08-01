@@ -5,11 +5,15 @@ defmodule Expl.Db.S3Object do
   alias Ecto.Changeset
 
   typed_schema "s3_object" do
+    # Querying metadata
     # TODO: Map feed to atom when pulling from db
     field :feed, {:array, :string}
     # field :producer, :string
+    field :environment, :string
+    field :data_type, :string
 
     # AWS Object Information
+    field :bucket_name, :string, null: false
     field :object_key, :string, null: false
     field :object_etag, :string
 
@@ -23,8 +27,24 @@ defmodule Expl.Db.S3Object do
     changeset
     |> Changeset.cast(
       params,
-      [:feed, :object_key, :object_etag, :object_modified_at, :object_storage_class]
+      [
+        :feed,
+        :environment,
+        :data_type,
+
+        # AWS Info
+        :bucket_name,
+        :object_key,
+        :object_etag,
+        :object_modified_at,
+        :object_storage_class
+      ]
     )
-    |> Changeset.validate_required([:object_key, :object_modified_at, :object_storage_class])
+    |> Changeset.validate_required([
+      :bucket_name,
+      :object_key,
+      :object_modified_at,
+      :object_storage_class
+    ])
   end
 end

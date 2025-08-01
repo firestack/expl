@@ -2,7 +2,7 @@ defmodule Expl.Feeds do
   def feed_from_key(key) do
     for {feed, conditions} <- config_feed_key_map(),
         Enum.all?(conditions, &String.contains?(key, &1)) do
-      feed
+      to_string(feed)
     end
   end
 

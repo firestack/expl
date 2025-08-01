@@ -12,8 +12,6 @@ defmodule Expl do
       options
       |> build_query()
       |> find_objects()
-
-    # |> filter_objects(options)
   end
 
   defp build_query(options) do
@@ -27,12 +25,14 @@ defmodule Expl do
   end
 
   defp find_objects(options) do
-    options
-    |> bucket()
+    bucket =
+      options
+      |> bucket()
+
+    bucket
     |> ExAws.S3.list_objects_v2(list_objects_params(options))
-    # |> ExAws.request!()
     |> ExAws.stream!()
-    |> Stream.map(&Map.merge(&1, process_object(&1)))
+    |> Stream.map(&Map.merge(&1, process_object(&1, bucket, options.environment |> to_string)))
   end
 
   defp bucket(%{environment: :prod}), do: "mbta-gtfs-s3"
@@ -43,35 +43,42 @@ defmodule Expl do
 
   defp list_objects_params(), do: []
 
-  defp process_object(%{
-         key: key,
-         e_tag: e_tag,
-         last_modified: last_modified,
-         storage_class: storage_class
-       }) do
+  defp process_object(
+         %{
+           key: key,
+           e_tag: e_tag,
+           last_modified: last_modified,
+           storage_class: storage_class
+         },
+         bucket,
+         environment
+       ) do
     %Expl.Db.S3Object{}
     |> Expl.Db.S3Object.changeset(%{
-      # todo: __struct__: Expl.Db.S3
+      bucket_name: bucket,
       object_key: key,
       object_etag: e_tag,
-      object_modified_at:
-        (
-          {:ok, datetime, _} = DateTime.from_iso8601(last_modified)
-          datetime
-        ),
+      object_modified_at: last_modified,
       object_storage_class: storage_class,
 
       # processed key
       # environment_id:
-      # environment:
+      environment: environment,
+      # source: "concentrate",
+      # source: "delta",
 
-      feed: Expl.Feeds.feed_from_key(key)
+      feed: Expl.Feeds.feed_from_key(key),
+      data_type: type_from_key(key)
       # producer: producer(key, options)
     })
   end
 
-  defp filter_objects(objects, _options) do
-    %{body: %{contents: contents}} = objects
-    contents
+  defp type_from_key(key) do
+    cond do
+      String.ends_with?(key, ".json") or String.ends_with?(key, ".json.gz") -> dbg(key); :json
+      true -> :pb
+    end
+    # tmp
+    |> to_string()
   end
 end
