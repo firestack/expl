@@ -47,6 +47,7 @@ defmodule Expl.MixProject do
       {:phoenix_pubsub, "~> 2.1"},
       {:ecto_sql, "~> 3.10"},
       {:ecto_sqlite3, ">= 0.0.0"},
+      {:typed_ecto_schema, "~> 0.4.3"},
       {:jason, "~> 1.2"}
     ]
   end

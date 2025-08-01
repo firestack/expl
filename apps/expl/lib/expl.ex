@@ -49,16 +49,17 @@ defmodule Expl do
          last_modified: last_modified,
          storage_class: storage_class
        }) do
-    %{
+    %Expl.Db.S3Object{}
+    |> Expl.Db.S3Object.changeset(%{
       # todo: __struct__: Expl.Db.S3
-      key: key,
-      e_tag: e_tag,
-      key_modified_at:
+      object_key: key,
+      object_etag: e_tag,
+      object_modified_at:
         (
           {:ok, datetime, _} = DateTime.from_iso8601(last_modified)
           datetime
         ),
-      storage_class: storage_class,
+      object_storage_class: storage_class,
 
       # processed key
       # environment_id:
@@ -66,7 +67,7 @@ defmodule Expl do
 
       feed: Expl.Feeds.feed_from_key(key)
       # producer: producer(key, options)
-    }
+    })
   end
 
   defp filter_objects(objects, _options) do
