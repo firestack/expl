@@ -34,6 +34,7 @@ defmodule Expl.S3ObjectPrefix do
       |> Integer.to_string()
       |> String.pad_leading(leading_zeros, "0")
 
+  # NOTE: file-tap sources from concentrate
   defp object_prefix(path, nil), do: path
   defp object_prefix(path, prefix) when is_binary(prefix), do: "#{prefix}/#{path}"
 end

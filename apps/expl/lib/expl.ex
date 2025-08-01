@@ -8,10 +8,9 @@ defmodule Expl do
   """
 
   def get_archive(options) do
-    objects =
-      options
-      |> build_query()
-      |> find_objects()
+    options
+    |> build_query()
+    |> find_objects()
   end
 
   defp build_query(options) do
@@ -30,7 +29,7 @@ defmodule Expl do
       |> bucket()
 
     bucket
-    |> ExAws.S3.list_objects_v2(list_objects_params(options))
+    |> ExAws.S3.list_objects_v2(dbg list_objects_params(options))
     |> ExAws.stream!()
     |> Stream.map(&Map.merge(&1, process_object(&1, bucket, options.environment |> to_string)))
   end
@@ -38,8 +37,14 @@ defmodule Expl do
   defp bucket(%{environment: :prod}), do: "mbta-gtfs-s3"
   defp bucket(%{environment: :dev_blue}), do: "mbta-gtfs-s3-dev-blue"
 
-  defp list_objects_params(%{datetime: %DateTime{} = datetime}),
-    do: [prefix: Expl.S3ObjectPrefix.from_datetime(datetime)] ++ list_objects_params()
+  defp list_objects_params(%{datetime: %DateTime{} = datetime} = options),
+    # [prefix: Expl.S3ObjectPrefix.from_datetime(datetime, object_prefix: "concentrate")] ++
+    do:
+      [
+        prefix:
+          Expl.S3ObjectPrefix.from_datetime(datetime, object_prefix: options[:source] || nil)
+      ] ++
+        list_objects_params()
 
   defp list_objects_params(), do: []
 
@@ -75,8 +80,11 @@ defmodule Expl do
 
   defp type_from_key(key) do
     cond do
-      String.ends_with?(key, ".json") or String.ends_with?(key, ".json.gz") -> dbg(key); :json
-      true -> :pb
+      String.ends_with?(key, ".json") or String.ends_with?(key, ".json.gz") ->
+        :json
+
+      true ->
+        :pb
     end
     # tmp
     |> to_string()
