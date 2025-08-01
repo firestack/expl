@@ -29,9 +29,9 @@ defmodule Expl do
       |> bucket()
 
     bucket
-    |> ExAws.S3.list_objects_v2(dbg list_objects_params(options))
+    |> ExAws.S3.list_objects_v2(list_objects_params(options))
     |> ExAws.stream!()
-    |> Stream.map(&Map.merge(&1, process_object(&1, bucket, options.environment |> to_string)))
+    |> Stream.map(&process_object(&1, bucket, options.environment |> to_string))
   end
 
   defp bucket(%{environment: :prod}), do: "mbta-gtfs-s3"
