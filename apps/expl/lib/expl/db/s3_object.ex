@@ -11,6 +11,7 @@ defmodule Expl.Db.S3Object do
     # field :producer, :string
     field :environment, :string
     field :data_type, :string
+    field :key_date, :utc_datetime_usec
 
     # AWS Object Information
     field :bucket_name, :string, null: false
@@ -31,6 +32,7 @@ defmodule Expl.Db.S3Object do
         :feed,
         :environment,
         :data_type,
+        :key_date,
 
         # AWS Info
         :bucket_name,

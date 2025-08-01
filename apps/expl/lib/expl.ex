@@ -47,6 +47,7 @@ defmodule Expl do
       # source: "delta",
 
       feed: Expl.Feeds.feed_from_key(key),
+      key_date: date_from_key(key),
       data_type: type_from_key(key)
       # producer: producer(key, options)
     })
@@ -60,7 +61,9 @@ defmodule Expl do
       true ->
         :pb
     end
-    # tmp
+    # temp: schema should be able to handle atoms
     |> to_string()
   end
+
+  defp date_from_key(_key), do: nil
 end
