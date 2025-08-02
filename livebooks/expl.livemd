@@ -61,5 +61,19 @@ current_duration =
 ## Download Files
 
 ```elixir
-if current_duration.day > 1
+for date <-
+      Stream.iterate(start_dt, &DateTime.shift(&1, minute: 1))
+      |> Enum.take(1) do
+  Expl.get_archive(%{
+    environment: :dev_blue,
+    datetime: date
+  })
+  |> Enum.map(&Ecto.Changeset.apply_action!(&1, :insert))
+  # |> Enum.take()
+  # |> Enum.filter(&("subway_vehicle" in &1.feed))
+  # |> Enum.take(1)
+  # |> Expl.S3.get_objects()
+  |> Enum.to_list()
+end
+|> Kino.Tree.new()
 ```
