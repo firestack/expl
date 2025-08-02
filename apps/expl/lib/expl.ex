@@ -7,11 +7,12 @@ defmodule Expl do
   if it comes from the database, an external API or others.
   """
 
-  def get_archive(options) do
+  def cache_archive_index(options) do
     options
     |> build_query()
     |> Expl.S3.list_objects!()
     |> Stream.map(&process_object(&1))
+    |> Stream.each(&Expl.Repo.insert(&1))
   end
 
   defp build_query(options) do

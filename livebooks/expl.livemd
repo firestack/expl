@@ -64,11 +64,12 @@ current_duration =
 for date <-
       Stream.iterate(start_dt, &DateTime.shift(&1, minute: 1))
       |> Enum.take(1) do
+
   Expl.get_archive(%{
     environment: :dev_blue,
     datetime: date
   })
-  |> Enum.map(&Ecto.Changeset.apply_action!(&1, :insert))
+  |> Enum.map(&Expl.Repo.insert(&1))
   # |> Enum.take()
   # |> Enum.filter(&("subway_vehicle" in &1.feed))
   # |> Enum.take(1)
@@ -76,4 +77,9 @@ for date <-
   |> Enum.to_list()
 end
 |> Kino.Tree.new()
+```
+
+```elixir
+Expl.Repo.all(Expl.Db.S3Object)
+
 ```
