@@ -23,7 +23,8 @@ start_date_input =
 end_date_input =
   Kino.Input.utc_datetime(
     "End Date",
-    default: DateTime.utc_now()
+    default: DateTime.utc_now(),
+    min: Kino.Input.read(start_date_input)
   )
   |> Kino.render()
 
@@ -65,11 +66,11 @@ for date <-
       Stream.iterate(start_dt, &DateTime.shift(&1, minute: 1))
       |> Enum.take(1) do
 
-  Expl.get_archive(%{
+  Expl.cache_archive_index(%{
     environment: :dev_blue,
     datetime: date
   })
-  |> Enum.map(&Expl.Repo.insert(&1))
+  # |> Enum.map(&Expl.Repo.insert(&1))
   # |> Enum.take()
   # |> Enum.filter(&("subway_vehicle" in &1.feed))
   # |> Enum.take(1)
