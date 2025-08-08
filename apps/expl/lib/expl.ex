@@ -7,12 +7,22 @@ defmodule Expl do
   if it comes from the database, an external API or others.
   """
 
+  def list_records(query) do
+    # Determine if the records have been populated
+    # - Cache some sort of "previous queries" table for determining stored ranges?
+
+    # If Not Populated: Fetch records into the store
+    # - Records may need to be fetched if the "environment" or "feed" is not "covered"
+
+    # Return records matching query
+  end
+
   def cache_archive_index(options) do
     options
     |> build_query()
     |> Expl.S3.list_objects!()
     |> Stream.map(&process_object(&1))
-    |> Stream.each(&Expl.Repo.insert(&1))
+    |> Stream.each(&Expl.Store.create_object_info/1)
   end
 
   defp build_query(options) do
@@ -33,8 +43,7 @@ defmodule Expl do
          bucket: bucket,
          environment: environment
        }) do
-    %Expl.Db.S3Object{}
-    |> Expl.Db.S3Object.changeset(%{
+    %{
       bucket_name: bucket,
       object_key: key,
       object_etag: e_tag,
@@ -51,7 +60,7 @@ defmodule Expl do
       key_date: date_from_key(key),
       data_type: type_from_key(key)
       # producer: producer(key, options)
-    })
+    }
   end
 
   defp type_from_key(key) do

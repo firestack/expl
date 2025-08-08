@@ -1,4 +1,3 @@
 defmodule Expl.S3.ListObjectsOptions do
-	defstruct [:bucket, :prefix]
+  defstruct [:bucket, :prefix]
 end
-

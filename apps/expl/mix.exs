@@ -49,7 +49,6 @@ defmodule Expl.MixProject do
       {:ecto_sqlite3, ">= 0.0.0"},
       {:typed_ecto_schema, "~> 0.4.3"},
       {:jason, "~> 1.2"},
-
       {:kino, "~> 0.16.1"}
     ]
   end

@@ -2,7 +2,7 @@ defmodule Expl.Repo.Migrations.CreateS3ObjectTable do
   use Ecto.Migration
 
   def change do
-    create table "s3_object" do
+    create table("s3_object") do
       add :feed, {:array, :text}
       add :environment, :string
       add :data_type, :string
