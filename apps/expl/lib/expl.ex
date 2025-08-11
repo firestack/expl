@@ -11,6 +11,14 @@ defmodule Expl do
     # Determine if the records have been populated
     # - Cache some sort of "previous queries" table for determining stored ranges?
 
+    with(
+      {:query_exists?, []} <- {:query_exists?, Expl.Store.get_s3_query(query)},
+      {:new_query, {:ok, result}} <- {:new_query, Expl.Store.create_s3_query(query)}
+    ) do
+      result
+    end
+    |> dbg()
+
     # If Not Populated: Fetch records into the store
     # - Records may need to be fetched if the "environment" or "feed" is not "covered"
 

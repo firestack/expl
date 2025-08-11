@@ -17,7 +17,7 @@ defmodule Expl.Db.S3Query do
   @doc false
   def changeset(s3_query, attrs) do
     s3_query
-    |> cast(attrs, [:start_at, :end_at, :s3_bucket, :bucket_prefix, :limit])
-    |> validate_required([:start_at, :end_at, :s3_bucket, :bucket_prefix, :limit])
+    |> cast(attrs, [:start_at, :end_at, :s3_bucket, :bucket_prefix, :limit], empty_values: [])
+    |> validate_required([:start_at, :end_at, :s3_bucket])
   end
 end

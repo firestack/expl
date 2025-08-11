@@ -23,8 +23,8 @@ start_date_input =
 end_date_input =
   Kino.Input.utc_datetime(
     "End Date",
-    default: DateTime.utc_now(),
-    min: Kino.Input.read(start_date_input)
+    default: DateTime.utc_now()
+    # min: Kino.Input.read(start_date_input)
   )
   |> Kino.render()
 
@@ -62,25 +62,42 @@ current_duration =
 ## Download Files
 
 ```elixir
-for date <-
-      Stream.iterate(start_dt, &DateTime.shift(&1, minute: 1))
-      |> Enum.take(1) do
+Expl.Store.get_s3_query(%{
+  start_at: start_dt,
+  end_at: end_dt,
+  s3_bucket: "asdf",
+  bucket_prefix: nil
+})
 
-  Expl.cache_archive_index(%{
-    environment: :dev_blue,
-    datetime: date
-  })
-  # |> Enum.map(&Expl.Repo.insert(&1))
-  # |> Enum.take()
-  # |> Enum.filter(&("subway_vehicle" in &1.feed))
-  # |> Enum.take(1)
-  # |> Expl.S3.get_objects()
-  |> Enum.to_list()
-end
+# for [start_dt, end_dt] <-
+#       Stream.iterate(start_dt, &DateTime.shift(&1, minute: 1))
+#       |> Stream.chunk_every(2, 1, :discard)
+#       |> Enum.take(1) 
+#   do
+
+#   # |> Enum.map(&Expl.Repo.insert(&1))
+#   # |> Enum.take()
+#   # |> Enum.filter(&("subway_vehicle" in &1.feed))
+#   # |> Enum.take(1)
+#   # |> Expl.S3.get_objects()
+#   # |> Enum.to_list()
+# end
+```
+
+```elixir
+Expl.Store.create_s3_query(%{
+  start_at: start_dt,
+  end_at: end_dt,
+  s3_bucket: "asdf",
+  bucket_prefix: ""
+})
+```
+
+```elixir
+Expl.Repo.all(Expl.Db.S3Query)
 |> Kino.Tree.new()
 ```
 
 ```elixir
-Expl.Repo.all(Expl.Db.S3Object)
 
 ```
