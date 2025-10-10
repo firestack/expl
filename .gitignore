@@ -1,3 +1,9 @@
+# Private Environment Configuration
+.private*
+
+# "Virtual Env" cache
+.cache/
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 
